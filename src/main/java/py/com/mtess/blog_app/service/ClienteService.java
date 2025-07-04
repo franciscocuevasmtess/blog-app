@@ -80,4 +80,14 @@ public class ClienteService {
         return convertToDto(clienteActualizado, clienteDTO1);
     }
 
+    @Transactional
+    public void eliminarCliente(Long id) throws Exception {
+        // Verificar si el cliente existe
+        Cliente cliente = repository.findById(id)
+                .orElseThrow(() -> new Exception("Cliente no encontrado con id: " + id));
+
+        // Eliminar el cliente
+        repository.delete(cliente);
+    }
+
 }
