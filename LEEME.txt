@@ -1,0 +1,44 @@
+Cómo probar primero en Postman
+Paso 1: Asegúrate que tu aplicación Spring Boot esté corriendo (deberías ver logs en la consola)
+
+Paso 2: Abre Postman y sigue estos pasos:
+
+Crear un usuario primero (esto solo lo haces una vez):
+
+Método: POST
+
+URL: http://localhost:8080/api/auth/registro
+
+Headers: Content-Type: application/json
+
+Body (raw JSON):
+
+json
+{
+  "username": "admin",
+  "password": "12345",
+  "email": "admin@example.com"
+}
+
+
+
+
+
+
+Probar el login:
+
+Método: GET
+
+URL: http://localhost:8080/api/clientes
+
+Ve a la pestaña "Authorization"
+
+Selecciona "Basic Auth"
+
+Username: admin
+
+Password: 12345
+
+Envía la petición
+
+Deberías recibir la lista de clientes (si no hay, un array vacío)
