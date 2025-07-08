@@ -1,5 +1,6 @@
 package py.com.mtess.blog_app.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,8 @@ import py.com.mtess.blog_app.model.Rol;
 import py.com.mtess.blog_app.model.Usuario;
 import py.com.mtess.blog_app.repository.RolRepository;
 import py.com.mtess.blog_app.repository.UsuarioRepository;
+
+import java.util.HashSet;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,28 +28,42 @@ public class AuthController {
     }
 
     @PostMapping("/registro")
-    public String registrarUsuario(@RequestBody RegistroDTO registroDTO) {
+    public ResponseEntity<?> registrarUsuario(@RequestBody RegistroDTO registroDTO) {
+        // 1. Validar si el usuario o email ya existen
         if (usuarioRepository.existsByUsername(registroDTO.getUsername())) {
-            return "El nombre de usuario ya existe";
+            //return "El nombre de usuario ya existe";
+            return ResponseEntity.badRequest().body("El nombre de usuario ya existe");
         }
 
         if (usuarioRepository.existsByEmail(registroDTO.getEmail())) {
-            return "El email ya está registrado";
+            //return "El email ya está registrado";
+            return ResponseEntity.badRequest().body("El email ya está registrado");
         }
 
+        // 2. Crear nuevo usuario
         Usuario usuario = new Usuario();
         usuario.setUsername(registroDTO.getUsername());
         usuario.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
         usuario.setEmail(registroDTO.getEmail());
         usuario.setActivo(true);
 
-        // Asignar rol por defecto (USER)
+        // 3. Asignar rol por defecto (USER)
         Rol rolUsuario = rolRepository.findByNombre("USER")
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+        // Asegurarse que la colección de roles está inicializada
+        if (usuario.getRoles() == null) {
+            usuario.setRoles(new HashSet<>());
+        }
+
         usuario.getRoles().add(rolUsuario);
 
+        // 4. Guardar el usuario
         usuarioRepository.save(usuario);
-        return "Usuario registrado exitosamente";
+
+        //return "Usuario registrado exitosamente";
+        // 5. Retornar respuesta
+        return ResponseEntity.ok("Usuario registrado exitosamente");
     }
 
 }

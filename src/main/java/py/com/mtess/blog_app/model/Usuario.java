@@ -1,41 +1,28 @@
 package py.com.mtess.blog_app.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "usuarios")
-//@Getter
-//@Setter
+
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@NotBlank
-    //@Size(max = 20)
     @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
-    //@NotBlank
-    //@Size(max = 50)
-    //@Email
     @Column(unique = true, nullable = false)
     private String email;
 
-    //@NotBlank
-    //@Size(max = 120)
     private boolean activo = true;
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -44,14 +31,28 @@ public class Usuario {
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comentario> comentarios = new HashSet<>();
 
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_roles",
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "rol_id")
     )
-    private Set<Rol> roles;
+    //private Set<Rol> roles;
+    private Set<Rol> roles = new HashSet<>(); // Inicializado
+
+    public Usuario() {
+    }
+
+    public Usuario(Long id, String username, String password, String email, boolean activo, Set<Post> posts, Set<Comentario> comentarios, Set<Rol> roles) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.activo = activo;
+        this.posts = posts;
+        this.comentarios = comentarios;
+        this.roles = roles;
+    }
 
     public Long getId() {
         return id;

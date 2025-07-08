@@ -10,6 +10,13 @@ import py.com.mtess.blog_app.repository.UsuarioRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+    /*
+    * CustomUserDetailsService: Es el "puente" entre tus usuarios en la base de datos y Spring Security. Su trabajo es:
+    * - Recibir un nombre de usuario.
+    * - Buscar ese usuario en la base de datos.
+    * - Si existe, convertirlo a un formato que Spring Security entienda.
+    * - Si no existe, lanzar un error.
+    * */
     private final UsuarioRepository usuarioRepository;
 
     public CustomUserDetailsService(UsuarioRepository usuarioRepository) {
