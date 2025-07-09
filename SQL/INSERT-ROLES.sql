@@ -1,0 +1,11 @@
+--select * from blog.roles;
+--select * from blog.usuarios;
+--select * from blog.usuarios_roles;
+insert into blog.roles (nombre) values ('ADMIN');
+insert into blog.roles (nombre) values ('USER');
+insert into blog.usuarios (username, "password", email, activo) values ('user1','123','user1@email.com',true);
+insert into blog.usuarios (username, "password", email, activo) values ('user2','123','user2@email.com',true);
+insert into blog.usuarios (username, "password", email, activo) values ('user3','123','user3@email.com',true);
+insert into blog.usuarios_roles (rol_id,usuario_id) values(3,4);
+insert into blog.usuarios_roles (rol_id,usuario_id) values(3,5);
+insert into blog.usuarios_roles (rol_id,usuario_id) values(4,6);
