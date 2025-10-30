@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import py.com.mtess.blog_app.dto.RegistroDTO;
+import py.com.mtess.blog_app.dto.RegistroRolDTO;
 import py.com.mtess.blog_app.model.Rol;
 import py.com.mtess.blog_app.model.Usuario;
 import py.com.mtess.blog_app.repository.RolRepository;
 import py.com.mtess.blog_app.repository.UsuarioRepository;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -64,6 +66,27 @@ public class AuthController {
         //return "Usuario registrado exitosamente";
         // 5. Retornar respuesta
         return ResponseEntity.ok("Usuario registrado exitosamente");
+    }
+
+
+    @PostMapping("/rol")
+    public ResponseEntity<?> registrarRol(@RequestBody RegistroRolDTO registroRolDTO) {
+
+        // 1. Validar si el rol ya existe
+        Optional<Rol> rol = rolRepository.findByNombre(registroRolDTO.getNombre());
+        if (rol.isPresent()) {
+            return ResponseEntity.badRequest().body("El nombre de rol ya existe");
+        }
+
+        // 2. Crear nuevo rol
+        Rol rol1 = new Rol();
+        rol1.setNombre(registroRolDTO.getNombre());
+
+        // 3. Guardar el rol
+        rolRepository.save(rol1);
+
+        // 4. Retornar respuesta
+        return ResponseEntity.ok("Rol registrado exitosamente");
     }
 
 }
